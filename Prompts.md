@@ -1,17 +1,23 @@
 # AI Assistance Log — Prompts.md
 
-## Project: The Data Hub (Sprint 09: Track B — Fullstack Developer)
+## Project: The Data Hub — Sprint 10 Track B (Fullstack Developer)
 
-This document tracks all AI prompts and interactions used during the development of Sprint 09 Track B, strictly abiding by course policy (LLMs authorized for debugging and conceptual explanation).
+This document tracks AI prompts and interactions used during the development of Sprint 09 and Sprint 10 Track B, strictly abiding by course policy. LLM assistance was used for debugging, conceptual explanation, implementation guidance, documentation, and QA support.
 
 ---
+
+## Sprint 09: Track B — Fullstack Developer
 
 ### Phase 1: Project Initialization & Express Server Setup
 
 #### Entry 1: Project Initialization
+
 - **Target Objective**: Initialize Node.js environment, configure `package.json`, install `express` as a core dependency, and install `nodemon` as a development dependency.
+
 - **Prompt Used**:
-  > "CRITICAL RULE: Build Sprint 09 strictly according to the Sprint 09 Track B assignment only. Do not modify, add, or anticipate any Sprint 10 requirements inside Sprint 09... I want to create the Sprint 09 Track B project, 'The Data Hub,' from zero as a separate Node.js + Express REST API project. Please begin with Step 1: Project Setup & Initialization."
+
+  > "CRITICAL RULE: Build Sprint 09 strictly according to the Sprint 09 Track B assignment only. Do not modify, add, or anticipate any Sprint 10 requirements inside Sprint 09. I want to create the Sprint 09 Track B project, 'The Data Hub,' from zero as a separate Node.js + Express REST API project. Please begin with Step 1: Project Setup & Initialization."
+
 - **Outcome / Explanation**:
   - `package.json` configured with entry point `server.js`.
   - Scripts configured: `"start": "node server.js"`, `"dev": "nodemon server.js"`.
@@ -19,27 +25,38 @@ This document tracks all AI prompts and interactions used during the development
   - Dev dependency: `nodemon`.
   - Clean `.gitignore` verified to exclude `node_modules/`.
 
+---
+
 #### Entry 2: Dev Server Startup Fix
+
 - **Target Objective**: Diagnose and resolve dev server startup failure ("The dev server didn't start, please fix it").
+
 - **Prompt Used**:
+
   > "The dev server didn't start, please fix it"
+
 - **Root Cause**: `package.json` was set to run `nodemon server.js`, but the initial `server.js` file had not yet been created, causing nodemon to fail on launch.
+
 - **Outcome / Explanation**:
   - Created `server.js` with Express server initialization and `express.json()` middleware.
-  - Bound listener to Port 5000 (Sprint 09 primary assignment requirement) and dual-bound to container proxy port 3000 to ensure connectivity across environments.
-  - Restarted dev server and verified HTTP 200 JSON response on both ports.
+  - Bound listener to Port 5000.
+  - Restarted dev server and verified HTTP 200 JSON response.
 
 ---
 
 ### Phase 2: In-Memory Database & CRUD Architecture
 
 #### Entry 3: In-Memory CRUD Implementation & Frontend Removal
+
 - **Target Objective**: Remove unrequested frontend/Vite files, implement `blogPosts = []` in-memory data store, and construct standard REST routes (`GET /posts`, `GET /posts/:id`, `POST /posts`, `PUT /posts/:id`, `DELETE /posts/:id`).
+
 - **Prompt Used**:
-  > "IMPORTANT: SPRINT 09 TRACK B CORRECTION TASK... Your task is to inspect my CURRENT project and correct it so that it fully satisfies the original Sprint 09 Track B assignment... Remove unnecessary frontend files... Sprint 09 must remain exactly a Node.js + Express REST API using an in-memory JavaScript array."
+
+  > "IMPORTANT: SPRINT 09 TRACK B CORRECTION TASK. Your task is to inspect my CURRENT project and correct it so that it fully satisfies the original Sprint 09 Track B assignment. Remove unnecessary frontend files. Sprint 09 must remain exactly a Node.js + Express REST API using an in-memory JavaScript array."
+
 - **Outcome / Explanation**:
-  - Deleted unused React/Vite scaffolding (`/src/`, `vite.config.ts`, `tsconfig.json`).
-  - Created `controllers/postController.js` containing `let blogPosts = []` and full CRUD logic with title and content validation, 400 Bad Request responses, 404 Not Found handling, and 201 Created statuses.
+  - Deleted unused React/Vite scaffolding.
+  - Created `controllers/postController.js` containing `let blogPosts = []` and full CRUD logic.
   - Created `routes/postRoutes.js` using `express.Router()` to cleanly route endpoints to controller actions.
 
 ---
@@ -47,100 +64,191 @@ This document tracks all AI prompts and interactions used during the development
 ### Phase 3: Custom Middleware, Authentication & Port Debugging
 
 #### Entry 4: Custom Logger Middleware & Mock Authentication
+
 - **Target Objective**: Implement custom request logger without third-party libraries and add a mock login endpoint returning a mock JWT token.
+
 - **Outcome / Explanation**:
   - Created `middleware/logger.js` logging `[METHOD] URL - HH:MM AM/PM`.
-  - Created `POST /login` in `server.js` accepting `email` and `password` and returning `{ "message": "Login successful", "token": "mock-jwt-token" }`.
+  - Created `POST /login` in `server.js` accepting `email` and `password` and returning a mock JWT response.
   - Added 404 handler for unknown routes and 500 global error handler avoiding stack trace leakage.
 
-#### Entry 5: Port Conflict Resolution (EADDRINUSE 8080)
-- **Target Objective**: Debug server failure during automated test execution.
-- **Root Cause**: When reading `process.env.PORT || 5000`, the container had `process.env.PORT=8080` already bound by the internal system, causing an `EADDRINUSE :::8080` unhandled error.
+---
+
+#### Entry 5: Port Conflict Resolution
+
+- **Target Objective**: Debug server failure caused by a port conflict during development/testing.
+
 - **Outcome / Explanation**:
-  - Changed port binding in `server.js` to strictly bind `PORT = 5000` (Sprint 09 requirement) and secondary listener on port 3000 with `EADDRINUSE` catch.
-  - Server successfully starts on port 5000 and 3000 without crashing.
+  - Investigated the port conflict.
+  - Updated the server configuration to use Port 5000 for local development.
+  - Verified that the server starts successfully.
+
+---
 
 #### Entry 6: Postman / Thunder Client QA Verification
-- **Target Objective**: Execute all 10 standard test cases and 6 failure cases against the live server.
+
+- **Target Objective**: Execute standard API test cases and failure cases against the local server.
+
 - **Outcome / Explanation**:
-  - All 16 tests executed against `http://localhost:5000`.
-  - Verified 201 Created on valid POST, 200 OK on GET, 200 OK on PUT and DELETE, 400 Bad Request on missing fields, and 404 Not Found on non-existent IDs.
-  - All responses returned valid JSON structures.
+  - Tested API endpoints against `http://localhost:5000`.
+  - Verified successful CRUD responses.
+  - Verified validation and error responses.
+  - Confirmed that API responses returned valid JSON structures.
+
+---
 
 #### Entry 7: Minimal Correction - Single Port 5000 Listener & Frontend Cleanup
-- **Target Objective**: Apply strict minimal corrections per Sprint 09 Track B instructions:
-  1. Remove extra port 3000 listener in `server.js` so only Port 5000 is used.
-  2. Remove leftover `index.html` frontend file.
-  3. Verify Postman and deployment instructions remain accurate without fabricating test results.
+
+- **Target Objective**: Apply strict minimal corrections per Sprint 09 Track B instructions.
+
 - **Outcome / Explanation**:
-  - `server.js` now exclusively binds to Port 5000 via `app.listen(PORT, ...)`.
-  - `index.html` was deleted; no frontend code remains.
-  - No MongoDB, Mongoose, or Sprint 10 features were added.
+  - `server.js` uses Port 5000 for local development.
+  - Removed unnecessary frontend code.
+  - No MongoDB, Mongoose, or Sprint 10 features were added during Sprint 09.
 
 ---
 
-## Sprint 10: Track B — Fullstack Developer
+# Sprint 10: Track B — Fullstack Developer
+
 **Theme**: NoSQL Cloud Databases & Object Data Modeling (ODM)
 
-### Phase 1: Mongoose ODM & MongoDB Atlas Provisioning Setup
+---
 
-#### Entry 8: ODM Dependency Installation & Environment Configuration
+## Phase 1: Mongoose ODM & MongoDB Atlas Provisioning Setup
+
+### Entry 8: ODM Dependency Installation & Environment Configuration
+
 - **Target Objective**: Install `mongoose` and `dotenv`, configure safe environment variables, verify `.gitignore` protection of `.env*`, and create a reusable database connection module (`config/db.js`).
+
 - **Prompt Used**:
-  > "PROJECT: The Data Hub. CURRENT VERSION: Sprint 09 — Track B (Fullstack). TARGET: Sprint 10 — Track B (Fullstack). THEME: NoSQL Cloud Databases & Object Data Modeling (ODM)... Transition this existing project from volatile in-memory arrays to persistent cloud storage using MongoDB Atlas and Mongoose."
+
+  > "PROJECT: The Data Hub. CURRENT VERSION: Sprint 09 — Track B (Fullstack). TARGET: Sprint 10 — Track B (Fullstack). THEME: NoSQL Cloud Databases & Object Data Modeling (ODM). Transition this existing project from volatile in-memory arrays to persistent cloud storage using MongoDB Atlas and Mongoose."
+
 - **Outcome / Explanation**:
   - Installed `mongoose` and `dotenv`.
-  - Created `config/db.js` using `mongoose.connect(process.env.MONGO_URI)` with error handling that prevents exposing database credentials.
-  - Updated `.env.example` to declare `MONGO_URI="your_mongodb_connection_string_here"` while preserving existing environment variables (`PORT`, `GEMINI_API_KEY`, `APP_URL`).
-  - Confirmed `.gitignore` protects all `.env*` files with `!.env.example` exception.
-  - Updated `server.js` to call `connectDB()` during startup while keeping Render-compatible port binding and container proxy support.
+  - Created `config/db.js` using `mongoose.connect(process.env.MONGO_URI)`.
+  - Added error handling so database connection errors do not expose credentials.
+  - Updated `.env.example` with a `MONGO_URI` placeholder.
+  - Confirmed `.gitignore` protects `.env*` files while allowing `.env.example`.
+  - Updated `server.js` to initialize the MongoDB connection during startup.
+  - Maintained environment-based port configuration for deployment compatibility.
 
 ---
 
-### Phase 2: Post Model & Database CRUD Migration
+## Phase 2: Post Model & Database CRUD Migration
 
-#### Entry 9: Post Model Schema & ObjectId CRUD Refactoring
-- **Target Objective**: Create Mongoose `Post` model, remove active in-memory array (`blogPosts = []`), and migrate `controllers/postController.js` to MongoDB operations.
+### Entry 9: Post Model Schema & ObjectId CRUD Refactoring
+
+- **Target Objective**: Create the Mongoose `Post` model, remove active in-memory storage, and migrate `controllers/postController.js` to MongoDB operations.
+
 - **Outcome / Explanation**:
-  - Created `models/Post.js` with `title` (String, required), `content` (String, required), `authorId` (ObjectId ref User, default null), and `createdAt` (Date, default Date.now).
-  - Deprecated and removed active in-memory storage array from `controllers/postController.js`.
-  - Migrated `POST /posts` to use `Post.create()`.
-  - Migrated `GET /posts` to use `Post.find().sort({ createdAt: -1 }).populate('authorId', 'name email')`.
-  - Migrated `GET /posts/:id` to use `Post.findById(id).populate(...)` with `mongoose.Types.ObjectId.isValid()` format validation.
-  - Migrated `PUT /posts/:id` to use `Post.findByIdAndUpdate()` with validation and updated document return.
-  - Migrated `DELETE /posts/:id` to use `Post.findByIdAndDelete()`.
-  - Ensured invalid ObjectId strings return HTTP 400 with `{ "error": "Invalid post ID format" }` rather than unhandled Mongoose CastError exceptions.
+  - Created `models/Post.js` with:
+    - `title` — String, required
+    - `content` — String, required
+    - `authorId` — ObjectId reference to `User`
+    - `createdAt` — Date
+  - Removed the active in-memory post storage from `controllers/postController.js`.
+  - Migrated `POST /posts` to `Post.create()`.
+  - Migrated `GET /posts` to `Post.find()`.
+  - Added sorting by `createdAt` in descending order.
+  - Added `.populate('authorId', 'name email')`.
+  - Migrated `GET /posts/:id` to `Post.findById()`.
+  - Migrated `PUT /posts/:id` to `Post.findByIdAndUpdate()`.
+  - Migrated `DELETE /posts/:id` to `Post.findByIdAndDelete()`.
+  - Added MongoDB ObjectId format validation.
+  - Invalid ObjectId strings return HTTP 400 instead of causing an unhandled Mongoose CastError.
 
 ---
 
-### Phase 3: User Model, Populate & Top 3 Recent Posts
+## Phase 3: User Model, Populate & Top 3 Recent Posts
 
-#### Entry 10: User Relationship Modeling, .populate() & Top 3 Route Ordering
-- **Target Objective**: Create `User` schema, establish relationship referencing via `Post.authorId`, implement `.populate()`, add `GET /posts/recent/top3`, and create minimal test user endpoints.
+### Entry 10: User Relationship Modeling, `.populate()` & Top 3 Route Ordering
+
+- **Target Objective**: Create the `User` schema, establish the relationship through `Post.authorId`, implement `.populate()`, add `GET /posts/recent/top3`, and create minimal user endpoints for relationship testing.
+
 - **Outcome / Explanation**:
-  - Created `models/User.js` with `name` (String, required), `email` (String), and `createdAt` (Date).
-  - Created `controllers/userController.js` and `routes/userRoutes.js` mounted at `/users` providing simple `POST /users` and `GET /users` for generating and verifying test users for relationship modeling without complex authentication.
-  - Added `GET /posts/recent/top3` query using `.sort({ createdAt: -1 }).limit(3).populate('authorId', 'name email')`.
-  - Configured route ordering in `routes/postRoutes.js` registering `GET /recent/top3` explicitly before `GET /:id` to eliminate route shadowing.
-  - Preserved existing `middleware/logger.js` request logging, mock `POST /login` authentication scaffolding, 404 handler, and global 500 error handler.
-  - Updated API root discovery endpoint `GET /` to reflect Sprint 10 Track B metadata and all active routes.
+  - Created `models/User.js` with:
+    - `name` — String, required
+    - `email` — String
+    - `createdAt` — Date
+  - Created `controllers/userController.js`.
+  - Created `routes/userRoutes.js`.
+  - Added `POST /users` for creating test users.
+  - Added `GET /users` for retrieving users.
+  - Added `authorId` reference from `Post` to `User`.
+  - Added `.populate('authorId', 'name email')` to relevant post queries.
+  - Added `GET /posts/recent/top3`.
+  - Implemented `.sort({ createdAt: -1 }).limit(3)`.
+  - Registered `/recent/top3` before `/:id` to avoid route conflicts.
+  - Preserved the existing request logger, mock login endpoint, 404 handler, and global error handler.
+  - Updated the API root discovery endpoint to reflect Sprint 10 Track B.
 
 ---
 
-### Phase 4: Documentation & QA Verification
+## Phase 4: Documentation, Postman QA & MongoDB Atlas Verification
 
-#### Entry 11: README Overhaul, Prompts Tracking & Endpoint Verification
-- **Target Objective**: Update `README.md` to comprehensively document Sprint 10 Track B while preserving Sprint 09 context; test all endpoints locally in the workspace.
+### Entry 11: README, Prompts Tracking & Endpoint Verification
+
+- **Target Objective**: Update project documentation for Sprint 10 Track B and verify the implemented API locally using Postman and MongoDB Atlas.
+
 - **Outcome / Explanation**:
-  - Updated `README.md` with complete architecture details, Atlas M0 setup instructions, Render environment variable guidance, Postman QA plan, request/response examples, and a 3-minute demo script.
-  - Verified local server startup on port 3000.
-  - Tested `GET /` (200 OK with Sprint 10 details).
-  - Tested `POST /login` (200 OK with mock JWT).
-  - Tested input validation on `POST /posts` (400 Bad Request on missing fields).
-  - Tested invalid `authorId` validation (400 Bad Request on malformed ObjectId).
-  - Tested invalid post ID handling on `GET /posts/123` (400 Bad Request).
-  - Tested route ordering on `GET /posts/recent/top3` (verified it routes to top 3 controller and not `/:id`).
-  - Tested 404 handler on unregistered routes (404 Not Found).
-  - Confirmed no remote GitHub operations (push, commit, sync) were performed per read-only instructions.
+  - Updated `README.md` with Sprint 10 Track B architecture and MongoDB Atlas documentation.
+  - Added MongoDB Atlas setup and environment variable guidance.
+  - Added Postman API testing documentation.
+  - Verified local server startup on Port 5000.
+  - Verified `GET /`.
+  - Verified `POST /login`.
+  - Verified `POST /posts`.
+  - Verified `GET /posts`.
+  - Verified `GET /posts/:id`.
+  - Verified `PUT /posts/:id`.
+  - Verified `DELETE /posts/:id`.
+  - Verified validation for missing post fields.
+  - Verified invalid ObjectId handling.
+  - Verified `POST /users`.
+  - Verified `GET /users`.
+  - Verified User/Post relationship using `authorId`.
+  - Verified `.populate()` returns the related user's `name` and `email`.
+  - Verified `GET /posts/recent/top3`.
+  - Verified that the endpoint returns a maximum of three posts sorted by newest `createdAt`.
+  - Verified MongoDB Atlas persistence by checking the `posts` and `users` collections.
+  - Confirmed that the actual `.env` file is protected by `.gitignore` and is not committed to Git.
 
+---
 
+## Phase 5: GitHub Repository
+
+### Entry 12: Sprint 10 Repository Setup
+
+- **Target Objective**: Publish the completed Sprint 10 Track B project in a separate GitHub repository while keeping the previous Sprint 09 repository separate.
+
+- **Outcome / Explanation**:
+  - Initialized Git for the Sprint 10 project.
+  - Verified `.env` is ignored by Git.
+  - Created a Sprint 10-specific commit.
+  - Created and configured a separate GitHub repository for Sprint 10 Track B.
+  - Pushed the Sprint 10 project to the separate repository.
+  - Confirmed that the Sprint 10 code is available in the dedicated repository.
+
+---
+
+## Current Sprint 10 Status
+
+The following core Sprint 10 requirements have been implemented and tested:
+
+- MongoDB Atlas connection
+- Mongoose ODM integration
+- Persistent MongoDB storage
+- Post schema
+- User schema
+- Post/User relationship
+- CRUD operations
+- ObjectId validation
+- `.populate()` relationship testing
+- Top 3 recent posts endpoint
+- Postman API testing
+- MongoDB Atlas persistence verification
+- Environment variable security
+- GitHub repository setup
+
+**Deployment to the final hosting platform remains a separate final step if required by the Sprint 10 assignment.**
