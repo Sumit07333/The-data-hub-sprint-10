@@ -1,4 +1,4 @@
-The Data Hub — RESTful API Server
+Data Hub — RESTful API Server
 
 ## Project Name
 
@@ -694,3 +694,56 @@ The-data-hub-sprint-10/
 - **Validation**: Added Mongoose schema validation and explicit `ObjectId.isValid()` checks, preventing server crashes from invalid IDs.
 
 - **Preserved**: Retained custom logger, mock authentication (`POST /login`), 404 handler, global error handler, and Render-compatible port handling.
+
+Sprint 10 Completion & Live Verification
+
+The Sprint 10 Track B implementation, testing, documentation, GitHub repository setup, MongoDB Atlas persistence, and Render deployment have been completed and verified.
+
+Implementation Verification
+
+MongoDB Atlas connected through Mongoose.
+
+Post and User Mongoose schemas implemented.
+
+Full Post CRUD operations implemented.
+
+authorId references the User model.
+
+Mongoose .populate() returns related author details.
+
+GET /posts/recent/top3 returns the three most recent posts ordered by createdAt descending.
+
+ObjectId validation and database error handling are implemented.
+
+Custom request logging, mock authentication, 404 handling, and global error handling are preserved.
+
+Live Deployment Verification
+
+The deployed API was verified using the live Render service:
+
+GET / → API discovery/status response
+
+GET /posts → MongoDB posts returned successfully
+
+GET /posts/recent/top3 → three most recent posts returned
+
+POST /users → user created successfully in MongoDB Atlas
+
+POST /posts with authorId → post created successfully
+
+.populate() → related user name and email returned successfully
+
+Render runtime logs → MongoDB Atlas connection confirmed
+
+Live Deployment
+
+Render:
+https://the-data-hub-sprint-10.onrender.com
+
+GitHub Repository:
+https://github.com/Sumit07333/The-data-hub-sprint-10
+
+Sprint 10 Status
+
+Sprint 10 Track B is complete and submission-ready.
+
