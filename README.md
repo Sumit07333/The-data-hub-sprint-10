@@ -73,7 +73,7 @@ The application reads configuration from environment variables via `dotenv`:
 
 | :--- | :--- | :--- |
 
-| `PORT` | Server listener port (defaults to `5000` locally, dynamic on Render, `3000` in preview) | `5000` |
+| `PORT` | Server listener port (defaults to `5000` locally and uses the platform-provided PORT on Render) | `5000` |
 
 | `MONGO_URI` | MongoDB Atlas SRV connection string with username & password | `mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/datahub?retryWrites=true&w=majority` |
 
@@ -155,7 +155,7 @@ npm run dev
 
 ```
 
-The server binds to port 5000 locally by default (or port 3000 if configured in container/preview):
+The server binds to port 5000 locally by default and uses the platform-provided PORT on Render:
 
 ```
 
