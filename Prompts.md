@@ -298,27 +298,6 @@ This document tracks AI prompts and interactions used during the development of 
 
 ---
 
-## Phase 5: GitHub Repository
-
-### Entry 12: Sprint 10 Repository Setup
-
-- **Target Objective**: Publish the completed Sprint 10 Track B project in a separate GitHub repository while keeping the previous Sprint 09 repository separate.
-
-- **Outcome / Explanation**:
-
-  - Initialized Git for the Sprint 10 project.
-
-  - Verified `.env` is ignored by Git.
-
-  - Created a Sprint 10-specific commit.
-
-  - Created and configured a separate GitHub repository for Sprint 10 Track B.
-
-  - Pushed the Sprint 10 project to the separate repository.
-
-  - Confirmed that the Sprint 10 code is available in the dedicated repository.
-
----
 
 ## Phase 5: GitHub Repository & Render Deployment
 
